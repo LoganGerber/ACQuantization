@@ -52,6 +52,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    quantized_image = QuantizeImage(args.image_file, args.random_seed)
+    quantized_image = QuantizeImage(
+        args.image_file.convert('RGB'), args.random_seed)
 
     Image.fromarray(quantized_image).save(args.output)
