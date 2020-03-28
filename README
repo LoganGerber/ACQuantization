@@ -1,0 +1,17 @@
+Small image color quantization for creating images recreatable in Animal Crossing: New Horizons
+
+First, install all prerequisites via
+pip install -r requirements.txt
+
+To run the quantization script:
+python ACQuantization path/to/image.file
+
+The quantization script has additional, optional command line args. View them by running:
+python ACQuantization -h
+
+
+To run the color generator:
+python ACColorGenerator.py
+
+Optionally, -t can be added to print the total number of colors at the end as well.
+python ACColorGenerator.py -t
