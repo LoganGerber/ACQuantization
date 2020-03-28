@@ -13,6 +13,9 @@ def QuantizeImage(image_file, nondeterministic=False):
     image_file -- An array-like containing the RGB values of an image.
         Must be of dimensions (x, y, 3), where x, y are the width and height of the image, respectively.
     nondeterministic -- should the k-means algorithm initialize with a random seed? (default False)
+
+    Returns:
+    A numpy.array with dimentions (x, y, 3) containing the RGB values of the quantized image.
     """
     ac_colors = np.asarray(list(ACColorGenerator.GenerateValidACColors()))
     image = np.array(image_file)
