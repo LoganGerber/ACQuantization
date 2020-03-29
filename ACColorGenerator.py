@@ -25,7 +25,7 @@ def GenerateHsvACColors():
     return hsv_values
 
 
-def HsvToRgb(hsv):
+def HsvToRgb(hsv, alpha=False):
     """ Convert an HSV color to RGB.
     hsv is expected to be of form [0-255, 0-255, 0-255]
     """
@@ -33,7 +33,12 @@ def HsvToRgb(hsv):
     norm_hsv = [channel / 255 for channel in hsv]
     norm_rgb = colorsys.hsv_to_rgb(norm_hsv[0], norm_hsv[1], norm_hsv[2])
 
-    return tuple(map(lambda c: c * 255, norm_rgb))
+    rgb = tuple(map(lambda c: c * 255, norm_rgb))
+
+    if alpha:
+        rgb = (rgb[0], rgb[1], rgb[2], hsv[3])
+
+    return rgb
 
 
 def GenerateRgbACColors():
