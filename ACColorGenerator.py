@@ -72,7 +72,10 @@ def HsvToACIndexes(hsv):
     hue_step = 255 / 29
     sat_val_step = 255 / 14
 
-    return (int(round(hsv[0] / hue_step)), int(round(hsv[1] / sat_val_step)), int(round(hsv[2] / sat_val_step)))
+    return (
+        int(round(hsv[0] / hue_step)) + 1,
+        int(round(hsv[1] / sat_val_step)) + 1,
+        int(round(hsv[2] / sat_val_step)) + 1)
 
 
 if __name__ == '__main__':
