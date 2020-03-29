@@ -29,6 +29,7 @@ def QuantizeImage(image_file, nondeterministic=False):
     predicted_image = kmeans.cluster_centers_[kmeans.predict(flattened_image)]
 
     # pylint: disable=consider-using-enumerate
+    # pylint: disable=redefined-outer-name
     for i in range(len(predicted_image)):
         predicted_color = predicted_image[i]
         distances = np.sum((rgb_ac_colors - predicted_color) ** 2, axis=1)
@@ -68,5 +69,32 @@ if __name__ == '__main__':
     quantized_image = QuantizeImage(
         args.image_file.convert('RGB'), args.random_seed)
 
-    Image.fromarray(quantized_image, mode='HSV').convert(
-        'RGB').save(args.output)
+    # Change the quantized image into RGB values with channels of size 8 bits
+    im_width, im_height, im_depth = quantized_image.shape
+    flattened_qimage = np.reshape(
+        quantized_image, (im_width*im_height, im_depth))
+
+    flattened_rgb_image = np.ndarray(flattened_qimage.shape)
+
+    # pylint: disable=consider-using-enumerate
+    for i in range(len(flattened_qimage)):
+        pixel = flattened_qimage[i]
+        pixel = ACColorGenerator.HsvToRgb(pixel)
+        pixel = [round(channel) for channel in pixel]
+        flattened_rgb_image[i] = pixel
+
+    fixed_image = flattened_rgb_image.astype(np.int8)
+    fixed_image = np.reshape(fixed_image, (im_width, im_height, im_depth))
+
+    Image.fromarray(fixed_image, mode='RGB').save(args.output)
+
+    if args.palette:
+        unique_colors = np.unique(flattened_qimage, axis=0)
+
+        for color in unique_colors:
+            if args.palette == 'hsv':
+                print(tuple(color))
+            elif args.palette == 'rgb':
+                print(ACColorGenerator.HsvToRgb(color))
+            elif args.palette == 'ac':
+                print(ACColorGenerator.HsvToACIndexes(color))
