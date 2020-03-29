@@ -6,20 +6,34 @@ import argparse
 def GenerateHsvACColors():
     """ Generate a list of all unique HSV colors available for use in the Animal Crossing: New Horizon Custom Designer.
     """
-    sat_val_step = 100 / 14
+    hue_step = 255 / 29
+    sat_val_step = 255 / 14
 
     hsv_values = list()
-    for hue in range(0, 360, 12):
+    hue = 0
+    while hue < 255:
         sat = 0
-        while sat <= 100:
+        while sat <= 255:
             val = 0
-            while val <= 100:
+            while val <= 255:
                 hsv_values.append((hue, sat, val))
 
                 val += sat_val_step
             sat += sat_val_step
+        hue += hue_step
 
     return hsv_values
+
+
+def HsvToRgb(hsv):
+    """ Convert an HSV color to RGB.
+    hsv is expected to be of form [0-255, 0-255, 0-255]
+    """
+
+    norm_hsv = [channel / 255 for channel in hsv]
+    norm_rgb = colorsys.hsv_to_rgb(norm_hsv[0], norm_hsv[1], norm_hsv[2])
+
+    return tuple(map(lambda c: c * 255, norm_rgb))
 
 
 def GenerateRgbACColors():
@@ -27,9 +41,7 @@ def GenerateRgbACColors():
     """
     rgb_values = list()
     for hsv_color in GenerateHsvACColors():
-        norm_rgb = colorsys.hsv_to_rgb(
-            hsv_color[0] / 360, hsv_color[1] / 100, hsv_color[2] / 100)
-        rgb_values.append(tuple(map(lambda c: c * 255, norm_rgb)))
+        rgb_values.append(HsvToRgb(hsv_color))
 
     return rgb_values
 
@@ -39,11 +51,7 @@ def GenerateRgbToHsvColorMap():
     """
     mapping = {}
     for hsv_color in GenerateHsvACColors():
-        norm_rgb = colorsys.hsv_to_rgb(
-            hsv_color[0] / 360, hsv_color[1] / 100, hsv_color[2] / 100)
-        rgb = tuple(map(lambda c: c * 255, norm_rgb))
-
-        mapping[rgb] = hsv_color
+        mapping[HsvToRgb(hsv_color)] = hsv_color
 
     return mapping
 
@@ -53,11 +61,7 @@ def GenerateHsvToRgbColorMap():
     """
     mapping = {}
     for hsv_color in GenerateHsvACColors():
-        norm_rgb = colorsys.hsv_to_rgb(
-            hsv_color[0] / 360, hsv_color[1] / 100, hsv_color[2] / 100)
-        rgb = tuple(map(lambda c: c * 255, norm_rgb))
-
-        mapping[hsv_color] = rgb
+        mapping[hsv_color] = HsvToRgb(hsv_color)
 
     return mapping
 
