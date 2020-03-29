@@ -43,15 +43,25 @@ def QuantizeImage(image_file, nondeterministic=False):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Quantize an image to use a color pallet available in Animal Crossing: New Horizons.')
+        description='Quantize an image to use a color palette available in Animal Crossing: New Horizons.',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
     parser.add_argument('image_file', type=Image.open,
                         help='Location of image to quantize.')
+
     parser.add_argument('-o', '--output', default='./output.png',
-                        help='Location to save the quantized image. Default is "output.png"', dest='output')
+                        help='Location to save the quantized image.', dest='output')
+
     parser.add_argument('--random-seed', action='store_true',
                         help='''If set, a random seed will be used for initial k-means values.
                                 This results in a non-deterministic images being generated.
                                 Omitting this will result in a deterministic image being generated.''')
+
+    parser.add_argument('-p', '--palette', choices=['rgb', 'hsv', 'ac'], dest='palette',
+                        help='''Print the color palette used in the final image to the standard output stream.
+                                "rgb" prints the colors in RGB format (0-255 for each channel).
+                                "hsv" prints the colors in HSV format (0-255 for each channel).
+                                "ac" prints the HSV indices given in Animal Crossing: New Horizons.''')
 
     args = parser.parse_args()
 
