@@ -66,6 +66,15 @@ def GenerateHsvToRgbColorMap():
     return mapping
 
 
+def HsvToACIndexes(hsv):
+    """ Convert a HSV color to its closest valid color in Animal Crossing: New Horizons
+    """
+    hue_step = 255 / 29
+    sat_val_step = 255 / 14
+
+    return (int(round(hsv[0] / hue_step)), int(round(hsv[1] / sat_val_step)), int(round(hsv[2] / sat_val_step)))
+
+
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser(
         description='Print all valid colors in Animal Crossing: New Horizon Custom Designer.', prefix_chars='-/')
