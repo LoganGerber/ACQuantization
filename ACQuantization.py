@@ -98,3 +98,4 @@ if __name__ == '__main__':
                 print(ACColorGenerator.HsvToRgb(color))
             elif args.palette == 'ac':
                 print(ACColorGenerator.HsvToACIndexes(color))
+        print('{} total colors.'.format(len(unique_colors)))
