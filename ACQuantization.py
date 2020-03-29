@@ -18,9 +18,9 @@ def QuantizeImage(image_file, nondeterministic=False):
     A numpy array with dimentions (x, y, 3) containing the HSV values of the quantized image.
     """
     color_map = ACColorGenerator.GenerateRgbToHsvColorMap()
-    rgb_ac_colors = np.asarray(list(color_map.keys()))
+    rgb_ac_colors = np.asarray(list(color_map.keys()), dtype=np.float64)
 
-    image = np.array(image_file)
+    image = np.array(image_file, dtype=np.float64)
     width, height, depth = tuple(image.shape)
 
     flattened_image = np.reshape(image, (width * height, depth))
