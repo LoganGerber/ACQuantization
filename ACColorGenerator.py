@@ -4,17 +4,17 @@ import argparse
 
 
 def GenerateHsvACColors():
-    """ Generate a set of all unique HSV colors available for use in the Animal Crossing: New Horizon Custom Designer.
+    """ Generate a list of all unique HSV colors available for use in the Animal Crossing: New Horizon Custom Designer.
     """
     sat_val_step = 100 / 14
 
-    hsv_values = set()
+    hsv_values = list()
     for hue in range(0, 360, 12):
         sat = 0
         while sat <= 100:
             val = 0
             while val <= 100:
-                hsv_values.add((hue, sat, val))
+                hsv_values.append((hue, sat, val))
 
                 val += sat_val_step
             sat += sat_val_step
@@ -23,13 +23,13 @@ def GenerateHsvACColors():
 
 
 def GenerateRgbACColors():
-    """ Generate a set of all unique RGB colors available for use in the Animal Crossing: New Horizon Custom Designer.
+    """ Generate a list of all unique RGB colors available for use in the Animal Crossing: New Horizon Custom Designer.
     """
-    rgb_values = set()
+    rgb_values = list()
     for hsv_color in GenerateHsvACColors():
         norm_rgb = colorsys.hsv_to_rgb(
             hsv_color[0] / 360, hsv_color[1] / 100, hsv_color[2] / 100)
-        rgb_values.add(tuple(map(lambda c: c * 255, norm_rgb)))
+        rgb_values.append(tuple(map(lambda c: c * 255, norm_rgb)))
 
     return rgb_values
 
