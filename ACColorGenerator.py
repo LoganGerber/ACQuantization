@@ -34,6 +34,34 @@ def GenerateRgbACColors():
     return rgb_values
 
 
+def GenerateRgbToHsvColorMap():
+    """ Generate a map from all Animal Crossing RGB colors to their respective HSV values
+    """
+    mapping = {}
+    for hsv_color in GenerateHsvACColors():
+        norm_rgb = colorsys.hsv_to_rgb(
+            hsv_color[0] / 360, hsv_color[1] / 100, hsv_color[2] / 100)
+        rgb = tuple(map(lambda c: c * 255, norm_rgb))
+
+        mapping[rgb] = hsv_color
+
+    return mapping
+
+
+def GenerateHsvToRgbColorMap():
+    """ Generate a map from all Animal Crossing HSV colors to their respective RGB values
+    """
+    mapping = {}
+    for hsv_color in GenerateHsvACColors():
+        norm_rgb = colorsys.hsv_to_rgb(
+            hsv_color[0] / 360, hsv_color[1] / 100, hsv_color[2] / 100)
+        rgb = tuple(map(lambda c: c * 255, norm_rgb))
+
+        mapping[hsv_color] = rgb
+
+    return mapping
+
+
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser(
         description='Print all valid colors in Animal Crossing: New Horizon Custom Designer.', prefix_chars='-/')
