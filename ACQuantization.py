@@ -1,4 +1,4 @@
-""" Quantize an image to use a color pallet available in Animal Crossing: New Horizons."""
+""" Quantize an image to use a color palette available in Animal Crossing: New Horizons."""
 import argparse
 import numpy as np
 from sklearn.cluster import KMeans
