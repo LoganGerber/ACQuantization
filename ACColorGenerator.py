@@ -46,7 +46,9 @@ def GenerateRgbACColors():
     """
     rgb_values = list()
     for hsv_color in GenerateHsvACColors():
-        rgb_values.append(HsvToRgb(hsv_color))
+        rgb = HsvToRgb(hsv_color)
+        if not rgb in rgb_values:
+            rgb_values.append(rgb)
 
     return rgb_values
 
@@ -72,7 +74,8 @@ def GenerateHsvToRgbColorMap():
 
 
 def HsvToACIndexes(hsv):
-    """ Convert a HSV color to its closest valid color in Animal Crossing: New Horizons
+    """ Convert an HSV color to its closest valid color in Animal Crossing: New Horizons.
+    HSV colors are expected to be of the form (0-255, 0-255, 0-255)
     """
     hue_step = 255 / 29
     sat_val_step = 255 / 14
@@ -83,24 +86,55 @@ def HsvToACIndexes(hsv):
         int(round(hsv[2] / sat_val_step)) + 1)
 
 
-if __name__ == '__main__':
-    argparser = argparse.ArgumentParser(
-        description='Print all valid colors in Animal Crossing: New Horizon Custom Designer.', prefix_chars='-/')
-    argparser.add_argument('-m', '--mode', dest='mode', choices=['rgb', 'rgb_rounded', 'hsv'], default='rgb',
-                           help='Format for the printed colors. Default is "rgb".')
-    argparser.add_argument('-t', '--total', action='store_true', dest='print_total',
-                           help='Print the total number of entries at the end.')
-
-    args = argparser.parse_args()
-
+def __ExecColors(args):
     colors = GenerateHsvACColors() if args.mode == 'hsv' else GenerateRgbACColors()
 
     for color in colors:
         if args.mode == 'rgb_rounded':
-            color = [round(color[0]), round(color[1]), round(color[2])]
-        else:
-            color = list(color)
+            color = (round(color[0]), round(color[1]), round(color[2]))
         print(color)
 
     if args.print_total:
         print('{} total colors.'.format(len(colors)))
+
+
+def __ExecIndex(args):
+    hue = (args.hue / args.ranges[0]) * 255
+    sat = (args.sat / args.ranges[1]) * 255
+    val = (args.val / args.ranges[2]) * 255
+
+    print(HsvToACIndexes((hue, sat, val)))
+
+
+if __name__ == '__main__':
+    argparser = argparse.ArgumentParser(
+        description='Color utilities for Animal Crossing: New Horizons.')
+
+    subparsers = argparser.add_subparsers(title='Utilities')
+
+    colors_parser = subparsers.add_parser(
+        'colors', help='Generate all valid colors usable in Animal Crossing: New Horizons.')
+
+    colors_parser.add_argument('-m', '--mode', dest='mode', choices=['rgb', 'rgb_rounded', 'hsv'], default='rgb',
+                               help='Format for the printed colors. Default is "rgb".')
+    colors_parser.add_argument('-t', '--total', action='store_true', dest='print_total',
+                               help='Print the total number of entries at the end.')
+    colors_parser.set_defaults(func=__ExecColors)
+
+    index_parser = subparsers.add_parser(
+        'index',
+        help='Convert an HSV value to the closest indexes available in the Animal Crossing Custom Designer.')
+
+    index_parser.add_argument('hue', help='Hue', metavar='Hue', type=float)
+    index_parser.add_argument('sat', help='Saturation',
+                              metavar='Saturation', type=float)
+    index_parser.add_argument('val', help='Value', metavar='Value', type=float)
+    index_parser.add_argument('-r', '--input-ranges', nargs=3, default=[255.0, 255.0, 255.0], type=float,
+                              help='''
+                              The maximum values for hue, saturation, and value. For example, when the values 360 100 100 are supplied, Hue will have a range of 0-360, Saturation will have a range 0-100, and Value will have a range 0-100. Default is 255 255 255.
+                              ''', dest='ranges', metavar='RANGE')
+    index_parser.set_defaults(func=__ExecIndex)
+
+    parsed_args = argparser.parse_args()
+
+    parsed_args.func(parsed_args)
