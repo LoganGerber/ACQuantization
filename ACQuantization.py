@@ -75,7 +75,7 @@ if __name__ == '__main__':
         has_alpha = True
 
     quantized_image = QuantizeImage(
-        args.image_file.resize((32, 32)), args.random_seed, has_alpha)
+        args.image_file.convert('RGBA' if has_alpha else 'RGB').resize((32, 32)), args.random_seed, has_alpha)
 
     # Change the quantized image into RGB values with channels of size 8 bits
     im_width, im_height, im_depth = quantized_image.shape
