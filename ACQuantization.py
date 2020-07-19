@@ -68,11 +68,21 @@ if __name__ == '__main__':
                                 "hsv" prints the colors in HSV format (0-255 for each channel).
                                 "ac" prints the HSV indices given in Animal Crossing: New Horizons.''')
 
+    parser.add_argument('--prequantize', action='store_true',
+                        help='''If set, quantization will happen once before the image is resized to 32x32.
+                                Quantization will still occur after resizing as well.''')
+
     args = parser.parse_args()
 
     has_alpha = False
     if args.image_file.mode == 'RGBA':
         has_alpha = True
+
+    converted_image = args.image_file.convert('RGBA' if has_alpha else 'RGB')
+
+    if args.prequantize:
+        converted_image = QuantizeImage(
+            converted_image, args.random_seed, has_alpha)
 
     quantized_image = QuantizeImage(
         args.image_file.convert('RGBA' if has_alpha else 'RGB').resize((32, 32)), args.random_seed, has_alpha)
