@@ -110,11 +110,13 @@ if __name__ == '__main__':
     if args.palette:
         unique_colors = np.unique(flattened_qimage, axis=0)
 
+        index = 1
         for color in unique_colors:
             if args.palette == 'hsv':
                 print(tuple(color))
             elif args.palette == 'rgb':
                 print(ACColorGenerator.HsvToRgb(color))
             elif args.palette == 'ac':
-                print(ACColorGenerator.HsvToACIndexes(color))
+                print('{} {}'.format(index, ACColorGenerator.HsvToACIndexes(color)))
+                index += 1
         print('{} total colors.'.format(len(unique_colors)))
