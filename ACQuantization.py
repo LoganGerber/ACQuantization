@@ -72,6 +72,10 @@ if __name__ == '__main__':
                         help='''If set, quantization will happen once before the image is resized to 32x32.
                                 Quantization will still occur after resizing as well.''')
 
+    parser.add_argument('--resize_algorithm', choices=['nearest', 'box', 'bilinear', 'hamming', 'bicubic', 'lanczos'],
+                        dest='alg',
+                        help='''Resizing algorithm to use when scaling the original image.''', default='bicubic')
+
     args = parser.parse_args()
 
     has_alpha = False
@@ -84,8 +88,23 @@ if __name__ == '__main__':
         converted_image = QuantizeImage(
             converted_image, args.random_seed, has_alpha)
 
+    resize_alg = None
+
+    if args.alg == 'nearest':
+        resize_alg = Image.NEAREST
+    elif args.alg == 'box':
+        resize_alg = Image.BOX
+    elif args.alg == 'bilinear':
+        resize_alg = Image.BILINEAR
+    elif args.alg == 'hamming':
+        resize_alg = Image.HAMMING
+    elif args.alg == 'bicubic':
+        resize_alg = Image.BICUBIC
+    elif args.alg == 'lanczos':
+        resize_alg = Image.LANCZOS
+
     quantized_image = QuantizeImage(
-        converted_image.resize((32, 32)), args.random_seed, has_alpha)
+        converted_image.resize((32, 32), resize_alg), args.random_seed, has_alpha)
 
     # Change the quantized image into RGB values with channels of size 8 bits
     im_width, im_height, im_depth = quantized_image.shape
