@@ -1,4 +1,4 @@
-﻿astroid==2.5.1
+astroid==2.5.1
 autopep8==1.5.5
 colorama==0.4.4
 isort==5.7.0
@@ -10,7 +10,7 @@ Pillow==9.0.1
 pycodestyle==2.6.0
 pylint==2.7.2
 scikit-learn==0.24.1
-scipy==1.6.1
+scipy==1.10.0
 threadpoolctl==2.1.0
 toml==0.10.2
 wrapt==1.12.1
