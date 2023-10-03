@@ -1,4 +1,4 @@
-﻿astroid==2.5.1
+astroid==2.5.1
 autopep8==1.5.5
 colorama==0.4.4
 isort==5.7.0
@@ -6,7 +6,7 @@ joblib==1.0.1
 lazy-object-proxy==1.5.2
 mccabe==0.6.1
 numpy==1.21.0
-Pillow==9.0.1
+Pillow==10.0.1
 pycodestyle==2.6.0
 pylint==2.7.2
 scikit-learn==0.24.1
